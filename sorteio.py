@@ -1,6 +1,8 @@
 import random
 import json
 import os
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
+import pygame
 
 DIRETORIO = 'files'
 
@@ -19,6 +21,11 @@ def salvar_participantes(participantes):
     with open(os.path.join(DIRETORIO, 'participantes.txt'), 'w') as arquivo:
         json.dump(participantes, arquivo)
 
+def reproduzir_som(arquivo):
+    pygame.mixer.init()
+    pygame.mixer.music.load(arquivo)
+    pygame.mixer.music.play()
+
 def adicionar_participante(participantes):
     numero = int(input("Digite o número escolhido (entre 0 e 120): "))
     
@@ -35,10 +42,13 @@ def adicionar_participante(participantes):
 
             salvar_participantes(participantes)
             print(f"numero {numero} adicionado com sucesso para o participante {nome}!")
+            reproduzir_som(os.path.join(DIRETORIO, 'audios', 'sucesso.mp3'))
         else:
             print(f"O número {numero} já está sendo utilizado por outro participante.")
+            reproduzir_som(os.path.join(DIRETORIO, 'audios', 'error.mp3'))
     else:
         print("Número fora do intervalo permitido. Digite um número entre 0 e 120.")
+        reproduzir_som(os.path.join(DIRETORIO, 'audios', 'error.mp3'))
 
 def excluir_participante(participantes):
     nome = input("Digite o nome do participante que deseja excluir: ").lower().strip()
@@ -50,10 +60,13 @@ def excluir_participante(participantes):
                 del participantes[nome]
             salvar_participantes(participantes)
             print(f"Número {numero_para_excluir} excluído com sucesso para o participante {nome}!")
+            reproduzir_som(os.path.join(DIRETORIO, 'audios', 'sucesso.mp3'))
         else:
             print(f"O número {numero_para_excluir} não pertence ao participante {nome}.")
+            reproduzir_som(os.path.join(DIRETORIO, 'audios', 'error.mp3'))
     else:
         print(f"O participante {nome} não foi encontrado.")
+        reproduzir_som(os.path.join(DIRETORIO, 'audios', 'error.mp3'))
 
 def mostrar_participantes(participantes):
     for nome, dados in participantes.items():
@@ -62,6 +75,7 @@ def mostrar_participantes(participantes):
         print(f'{nome}: Números: {numeros}, Telefone: {telefone}')
     if not participantes:
         print('Não há participantes cadastrados.')
+        reproduzir_som(os.path.join(DIRETORIO, 'audios', 'error.mp3'))
 
 def main():
     participantes = carregar_participantes()
@@ -85,14 +99,17 @@ def main():
                 vencedor_numero = random.choice(vencedor_dados['numeros'])
                 vencedor_telefone = vencedor_dados['telefone']
                 print(f"O vencedor é:\nNome: {vencedor_nome}, Número: {vencedor_numero}, Telefone: {vencedor_telefone}!")
+                reproduzir_som(os.path.join(DIRETORIO, 'audios', 'ganhador.mp3'))
             else:
                 print("Não há participantes para realizar o sorteio.")
+                reproduzir_som(os.path.join(DIRETORIO, 'audios', 'error.mp3'))
 
         elif menu == 'exit':
             break
 
         else:
             print('Opção inválida.')
+            reproduzir_som(os.path.join(DIRETORIO, 'audios', 'error.mp3'))
 
 if __name__ == "__main__":
     main()
