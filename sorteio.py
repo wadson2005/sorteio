@@ -1,6 +1,7 @@
 import random
 import json
 import os
+import time
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame
 
@@ -98,6 +99,9 @@ def main():
                 vencedor_dados = participantes[vencedor_nome]
                 vencedor_numero = random.choice(vencedor_dados['numeros'])
                 vencedor_telefone = vencedor_dados['telefone']
+                print("sorteando...")
+                reproduzir_som(os.path.join(DIRETORIO, 'audios', 'sorteando.mp3'))
+                time.sleep(5)
                 print(f"O vencedor é:\nNome: {vencedor_nome}, Número: {vencedor_numero}, Telefone: {vencedor_telefone}!")
                 reproduzir_som(os.path.join(DIRETORIO, 'audios', 'ganhador.mp3'))
             else:
